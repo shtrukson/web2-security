@@ -50,14 +50,14 @@ app.post("/prijava", (req, res) => {
 
   if (ranjivost) {
     if (!korisnik) {
-      res.json({ uspjeh: false, poruka: "Korisnik '" + korisnickoIme + "' ne postoji." });
+      res.json({ uspjeh: false, poruka: "korisnik " + korisnickoIme + " ne postoji" });
       return;
     }
     if (korisnik.lozinka !== lozinka) {
-      res.json({ uspjeh: false, poruka: "Pogrešna lozinka za korisnika '" + korisnickoIme + "'." });
+      res.json({ uspjeh: false, poruka: "kriva lozinka za korisnika " + korisnickoIme });
       return;
     }
-    res.json({ uspjeh: true, poruka: "Prijava uspješna! Dobrodošli, " + korisnickoIme + "." });
+    res.json({ uspjeh: true, poruka: "prijava uspjesna, korisnik " + korisnickoIme });
     return;
   }
 
@@ -65,7 +65,7 @@ app.post("/prijava", (req, res) => {
 
   if (stanje.blokiranDo > Date.now()) {
     const sekunde = Math.ceil((stanje.blokiranDo - Date.now()) / 1000);
-    res.json({ uspjeh: false, poruka: "Previše neuspjelih pokušaja. Pokušajte ponovno za " + sekunde + " s." });
+    res.json({ uspjeh: false, poruka: "racun je zakljucan, pokusaj ponovno za " + sekunde + " s" });
     return;
   }
 
@@ -76,12 +76,12 @@ app.post("/prijava", (req, res) => {
       stanje.blokiranDo = Date.now() + TRAJANJE_BLOKADE;
     }
     neuspjesniPokusaji[korisnickoIme] = stanje;
-    res.json({ uspjeh: false, poruka: "Neispravno korisničko ime ili lozinka." });
+    res.json({ uspjeh: false, poruka: "krivo korisnicko ime ili lozinka" });
     return;
   }
 
   delete neuspjesniPokusaji[korisnickoIme];
-  res.json({ uspjeh: true, poruka: "Prijava uspješna! Dobrodošli, " + korisnickoIme + "." });
+  res.json({ uspjeh: true, poruka: "prijava uspjesna, korisnik " + korisnickoIme });
 });
 
 const PORT = process.env.PORT || 3000;

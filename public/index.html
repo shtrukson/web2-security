@@ -3,51 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Drugi projekt</title>
+  <title>Web2 - sigurnost</title>
   <style>
-    body { font-family: Arial, sans-serif; max-width: 900px; margin: 0 auto; padding: 16px; }
-    section { border-top: 2px dashed #d33; padding: 8px 0 24px; }
-    .upute { font-style: italic; }
-    .istaknuto { background: #ff0; font-weight: bold; font-style: normal; }
-    input[type=text], input[type=password] { padding: 4px; margin: 4px 8px 4px 0; }
-    button { margin: 8px 8px 8px 0; padding: 4px 10px; }
-    pre { background: #f2f2f2; padding: 8px; white-space: pre-wrap; word-break: break-word; }
-    table { border-collapse: collapse; margin-top: 8px; }
-    td, th { border: 1px solid #999; padding: 4px 8px; }
+    body { margin: 0; font-family: Verdana, sans-serif; font-size: 14px; background: #eef1f4; color: #222; }
+    header { background: #2c3e50; color: white; padding: 14px 20px; }
+    header h1 { margin: 0; font-size: 20px; }
+    header p { margin: 4px 0 0; font-size: 12px; color: #c7d0d9; }
+    main { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; }
+    .kartica { flex: 1; min-width: 300px; background: white; border-radius: 6px; padding: 16px; border-top: 5px solid #2980b9; }
+    .kartica.druga { border-top-color: #8e44ad; }
+    .kartica h2 { margin-top: 0; font-size: 17px; }
+    ol { padding-left: 20px; color: #555; }
+    li { margin-bottom: 4px; }
+    code { background: #f4f4f4; padding: 1px 4px; }
+    .prekidac { display: flex; align-items: center; gap: 10px; margin: 12px 0; }
+    .prekidac input { display: none; }
+    .klizac { width: 40px; height: 20px; background: #27ae60; border-radius: 20px; position: relative; cursor: pointer; }
+    .klizac::after { content: ""; position: absolute; width: 16px; height: 16px; top: 2px; left: 2px; background: white; border-radius: 50%; }
+    .prekidac input:checked + .klizac { background: #c0392b; }
+    .prekidac input:checked + .klizac::after { left: 22px; }
+    .stanje { font-weight: bold; color: #27ae60; }
+    .stanje.ranjivo { color: #c0392b; }
+    .polja input { width: 100%; box-sizing: border-box; padding: 6px; margin: 4px 0 10px; border: 1px solid #bbb; }
+    button { padding: 7px 12px; border: none; background: #2c3e50; color: white; cursor: pointer; margin-right: 6px; }
+    button.napad { background: #c0392b; }
+    .konzola { background: #1e1e1e; color: #ddd; font-family: monospace; padding: 10px; margin-top: 12px; min-height: 60px; white-space: pre-wrap; word-break: break-word; }
+    .konzola .crveno { color: #ff6b6b; }
+    .konzola table { border-collapse: collapse; margin-top: 8px; }
+    .konzola td, .konzola th { border: 1px solid #555; padding: 3px 8px; text-align: left; }
   </style>
 </head>
 <body>
-  <h1>Drugi projekt</h1>
+  <header>
+    <h1>Web2 - sigurnost web aplikacija</h1>
+    <p>Drugi projekt, JMBAG 0364000684</p>
+  </header>
 
-  <section>
-    <h2>SQL umetanje (SQL Injection)</h2>
-    <p class="upute"><b>Upute:</b> Unesite korisničko ime i lozinku za prikaz vlastitih podataka (npr. <b>ana</b> / <b>Ana!Sigurna#2026</b>).
-      Za napad tautologijom u polje korisničko ime upišite <span class="istaknuto">' OR '1'='1' --</span> (lozinka može biti bilo što).
-      Kad je ranjivost uključena, prikazat će se podaci svih korisnika. Kad je isključena, koristi se parametrizirani upit i napad ne uspijeva.</p>
-    <label><input type="checkbox" id="sqlRanjivost" checked> Ranjivost uključena</label>
-    <div>
-      <label>Korisničko ime: <input type="text" id="sqlKorisnickoIme"></label>
-      <label>Lozinka: <input type="password" id="sqlLozinka"></label>
+  <main>
+    <div class="kartica">
+      <h2>SQL injection</h2>
+      <ol>
+        <li>Upisi <code>ana</code> i lozinku <code>Ana!Sigurna#2026</code> - dobijes samo njene podatke.</li>
+        <li>Za korisnicko ime upisi <code>' OR '1'='1' --</code>, lozinka moze biti bilo sto.</li>
+        <li>Kad je ranjivo ispisu se svi korisnici, kad je zasticeno nista.</li>
+      </ol>
+      <label class="prekidac">
+        <input type="checkbox" id="sqlRanjivost" checked>
+        <span class="klizac"></span>
+        <span class="stanje ranjivo" id="sqlStanje">RANJIVO</span>
+      </label>
+      <div class="polja">
+        Korisnicko ime
+        <input type="text" id="sqlKorisnickoIme">
+        Lozinka
+        <input type="password" id="sqlLozinka">
+      </div>
+      <button id="sqlGumb">Dohvati podatke</button>
+      <div class="konzola" id="sqlRezultat"></div>
     </div>
-    <button id="sqlGumb">Prikaži podatke</button>
-    <div id="sqlRezultat"></div>
-  </section>
 
-  <section>
-    <h2>Loša autentifikacija (Broken Authentication)</h2>
-    <p class="upute"><b>Upute:</b> Kad je ranjivost uključena, aplikacija otkriva postoji li korisnik (npr. probajte korisnika <b>nepostojeci</b> pa <b>admin</b>),
-      dopušta neograničen broj pokušaja prijave i korisnik <b>admin</b> ima slabu lozinku.
-      Gumb <b>Pokreni brute-force napad</b> isprobava listu čestih lozinaka za korisnika admin i pronalazi lozinku.
-      Kad je ranjivost isključena, poruka o grešci je uvijek ista, a nakon 3 neuspjela pokušaja račun se blokira na 60 sekundi pa napad ne uspijeva.</p>
-    <label><input type="checkbox" id="authRanjivost" checked> Ranjivost uključena</label>
-    <div>
-      <label>Korisničko ime: <input type="text" id="authKorisnickoIme"></label>
-      <label>Lozinka: <input type="password" id="authLozinka"></label>
+    <div class="kartica druga">
+      <h2>Broken authentication</h2>
+      <ol>
+        <li>Prijavi se s <code>nepostojeci</code> pa s <code>admin</code> i krivom lozinkom - poruke su razlicite.</li>
+        <li>Klikni "Brute force" - isprobava se 10 cestih lozinaka za admina.</li>
+        <li>Kad je zasticeno poruka je uvijek ista i nakon 3 kriva pokusaja racun se zakljuca na 60 s.</li>
+      </ol>
+      <label class="prekidac">
+        <input type="checkbox" id="authRanjivost" checked>
+        <span class="klizac"></span>
+        <span class="stanje ranjivo" id="authStanje">RANJIVO</span>
+      </label>
+      <div class="polja">
+        Korisnicko ime
+        <input type="text" id="authKorisnickoIme">
+        Lozinka
+        <input type="password" id="authLozinka">
+      </div>
+      <button id="prijavaGumb">Prijava</button>
+      <button class="napad" id="bruteForceGumb">Brute force</button>
+      <div class="konzola" id="authRezultat"></div>
     </div>
-    <button id="prijavaGumb">Prijava</button>
-    <button id="bruteForceGumb">Pokreni brute-force napad</button>
-    <pre id="authRezultat"></pre>
-  </section>
+  </main>
 
   <script src="skripta.js"></script>
 </body>
