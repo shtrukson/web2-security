@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Web2 - sigurnost</title>
   <style>
-    body { margin: 0; font-family: Verdana, sans-serif; font-size: 14px; background: #eef1f4; color: #222; }
-    header { background: #2c3e50; color: white; padding: 14px 20px; }
+    body { margin: 0; background: #eef1f4; color: #222; }
+    header { padding: 14px 20px; }
     header h1 { margin: 0; font-size: 20px; }
-    header p { margin: 4px 0 0; font-size: 12px; color: #c7d0d9; }
+    header p { margin: 4px 0 0; }
     main { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; }
-    .kartica { flex: 1; min-width: 300px; background: white; border-radius: 6px; padding: 16px; border-top: 5px solid #2980b9; }
-    .kartica.druga { border-top-color: #8e44ad; }
+    .kartica { flex: 1; min-width: 300px; background: white; border-radius: 6px; padding: 16px; }
     .kartica h2 { margin-top: 0; font-size: 17px; }
     ol { padding-left: 20px; color: #555; }
     li { margin-bottom: 4px; }
@@ -62,7 +61,7 @@
       <div class="konzola" id="sqlRezultat"></div>
     </div>
 
-    <div class="kartica druga">
+    <div class="kartica">
       <h2>Broken authentication</h2>
       <ol>
         <li>Prijavi se s <code>nepostojeci</code> pa s <code>admin</code> i krivom lozinkom - poruke su razlicite.</li>
